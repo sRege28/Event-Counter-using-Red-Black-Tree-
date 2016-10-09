@@ -1,518 +1,420 @@
 
 
-/*
- * BST insert,search and print functions work, as do rotates;
- * RB insert working perfectly!
- * RB transplant and tree min work
- * RB delete working perfectly!
- * All 5 functions work!
- * File reader works
- * */
+
 
 import java.io.*;
 import java.util.*;
 
-class Node{
-	
+class Node
+ {
 	public int id;
 	public int count;
 	public char color;
 	Node left,right,parent;
 	
-	//Creates a null Node
+	
 		
 	public Node()
-	{
-		this.id = -1;
-		this.count = -1;
-		color = '-';
-		left = right = parent = this; 
+	{	
+	  this.id = -1;
+	  this.count = -1;
+	  color = '-';
+	  left = right = parent = this; 
 	}
 	
-	//Creates a Node with id and count
-	public Node(int id, int count){
-		
-		this.id =id;
-		this.count=count;
-		color = '-';
-		
-		Node nil = new Node();
-	    left =right=parent=nil;
-		
-		
-		
-		}
+	
+	public Node(int id, int count)
+	{
+	   this.id =id;
+	   this.count=count;
+	   color = '-';
+	   Node nil = new Node();
+	   left =right=parent=nil;
+	}
 	
 	//Checks if a given node is a null or sentinel node
-	public boolean isNil(){
-		
-		if(this.id==-1 && this.count ==-1)
-		  return true;
-		
-		else return false;
+	public boolean isNil()
+	{
+	  if(this.id==-1 && this.count ==-1)
+            return true;
+	  else return false;
 	}
  
-        //Prints the content of the node
-	public void print()
+      	public void print()
 	{
-		System.out.println(this.id+" "+this.count);
-		
+	  System.out.println(this.id+" "+this.count);
 	}
 	
-  }
+ }
 
 
-class Tree{
-	
+class Tree
+ {
 	Node root = new Node();
-	
 	Node temp = new Node();
 	
 	public Tree(){}
 	
-	//Inserts a node in the tree
-	public void insert(Node n){
-		   
-		n.color ='r';
-		
-		if(this.root.isNil())
-			this.root =n;		
-		else
-			this.root = insert(root,n);
-		insertFixup(n);  
-		
-		
+	public void insert(Node n)
+	{
+	 n.color ='r';
+         if(this.root.isNil())
+	    this.root =n;		
+	 else
+	    this.root = insert(root,n);
+	 insertFixup(n);  	
 	}
 	
-	// Inserts the node in the tree(non-root node)
-	private Node insert(Node trnode, Node n){
-		
-		if(trnode.isNil())
-		 
-		{
-		  trnode = n;
-		  //n.parent = trnode;
-		  return trnode;
-			
-		}
-		 
-		else
-			if(n.id <= trnode.id)
-			 {	
-				n.parent = trnode;
-				trnode.left =insert(trnode.left, n);
-			 
-			 }	
-			else if(n.id > trnode.id)
-			  {
-				n.parent = trnode;
-				trnode.right =insert(trnode.right, n);
-		
-			  }
-		return trnode;
-		
-	}
+	private Node insert(Node trnode, Node n)
+	{
+	  if(trnode.isNil())
+	   {
+             trnode = n;
+             return trnode;
+	   }
+	  else
+	    if(n.id <= trnode.id)
+	     {	
+		n.parent = trnode;
+		trnode.left =insert(trnode.left, n);
+	     }	
+	     else if(n.id > trnode.id)
+                   {
+		     n.parent = trnode;
+		     trnode.right =insert(trnode.right, n);
+	           }
+	   return trnode;
+         }
 	
 	//Left rotates the tree
-	public void l_rot(Node x){
-	    
-	if(x.isNil()) return;	
-		
-	else{
+	public void l_rot(Node x)
+	{
+	 if(x.isNil()) 
+           return;	
+	 else{
 		Node y = x.right;
 		x.right = y.left;
-		
 		if(!y.left.isNil())
-           y.left.parent = x;
-		y.parent = x.parent;
+                  y.left.parent = x;
+		
+		 y.parent = x.parent;
 		
 		if(x.parent.isNil())
 		  root = y;
 		else if(x==x.parent.left)
-		 x.parent.left = y;
+		  x.parent.left = y;
 		else x.parent.right = y;
 		
 		y.left = x;
 		x.parent = y;
-	}
-   }
+	     }
+         }
 	//Right rotates the node
-	public void r_rot(Node x){
-		
-		if(x.isNil()) return;	
-		
-		else{	
-		
-		Node y = x.left;
-		x.left = y.right;
-		if(!y.right.isNil())
-		 y.right.parent = x;
-		y.parent = x.parent;
-		if(x.parent.isNil())
+	public void r_rot(Node x)
+	{
+	  if(x.isNil()) 
+	    return;	
+	  else
+	  {		
+	    Node y = x.left;
+            x.left = y.right;
+	    if(!y.right.isNil())
+	       y.right.parent = x;
+	    y.parent = x.parent;
+	    if(x.parent.isNil())
 		  root = y;
-		else if(x == x.parent.right)
+	    else if(x == x.parent.right)
 	            x.parent.right =y;
-		     else
-	             x.parent.left =y;       
-	         y.right =x;
-	         x.parent =y;
-		}
+            else
+	      x.parent.left =y;       
+	    y.right =x;
+	    x.parent =y;
+	   }
 	}       
 	
 	// Maintains RB properties after insering node
-	public void insertFixup(Node n){
-	
-		
-		
-		while((!n.parent.isNil()) && n.parent.color == 'r')
-		{
-			Node y;
-			
-			if(n.parent == n.parent.parent.left)
-			    {y = n.parent.parent.right;
-			      
-			    if((!y.isNil()) && y.color =='r')
-			         {n.parent.color ='b';
-		              y.color ='b';
-		              n.parent.parent.color = 'r';
-		              n = n.parent.parent;
-			         }			    
-			    else if(n==n.parent.right)     
-			            {
-			    	       n=n.parent;
-			    	       l_rot(n);
-			            }
-			         n.parent.color = 'b';
-			         n.parent.parent.color ='r';
-			         r_rot(n.parent.parent);
-			    
-			    }
-			
-			else{
-				
-				
-			    y = n.parent.parent.left;
-			      
-			    if((!y.isNil()) && y.color =='r')
-			         {n.parent.color ='b';
-		              y.color ='b';
-		              n.parent.parent.color = 'r';
-		              n = n.parent.parent;
-			         }			    
-			    else if(n==n.parent.left)     
-			            {
-			    	       n=n.parent;
-			    	       r_rot(n);
-			    	       
-			    	       
-			            }
-			         n.parent.color = 'b';
-			         n.parent.parent.color ='r';
-			         l_rot(n.parent.parent);
-			    
-			    
-				
-				
-		 }// end else
-			
-			
-			    
-	    }	//end while
-		
-		
-root.color = 'b';	
-		
-		
-	}// end fixup
-	
-	
-	
-	//Transplants Node y to node x
-	public void transplant(Node x, Node y){
-		
-		if(x.parent.isNil())
-		    this.root = y;
-		else if(x ==x.parent.left)
-		     x.parent.left = y;
-		else x.parent.right = y;
-		y.parent = x.parent;
-	}
-	
-	// GIves the leftmost element (minimum) in the tree
-	public Node treeMin(Node x){
-		
-	
-		
-		while(!x.left.isNil())
-		 x = x.left;
-		
-		return x;
-	}
-	
-	
-	//Deletes the node from a tree
-	public void delete(Node z){
-		
-		Node x,y;
-		y = z;
-		char orig = z.color;
-		if(z.left.isNil())
-		{ x = z.right;
-		    transplant(z,z.right);}
-		else if(z.right.isNil())    
-		      { x = z.right;   
-		        transplant(z, z.left);}
-		     else{
-			        y = treeMin(z.right); 
-		           	orig = y.color;
-			        x = y.right;
-			        if(y.parent==z)  
-			          x.parent=y;
-			        else{
-			        	transplant(y,y.right);
-			        	 y.right = z.right;
-			             y.right.parent =y;}
-	                transplant(z,y);		        
-			        y.left = z.left;
-			        y.left.parent =y;
-			        y.color = z.color;
-			      }
-		if(orig == 'b')
-		  deleteFixup(x);
-		
-		}
-
-	// Maintains RB properties after a node is deleted
-public void deleteFixup(Node x){
-		
- 	
-	
- while(x!= root && (x.color =='b' || x.color == '-')){
-	 Node y;
-   if(x==x.parent.left)
+	public void insertFixup(Node n)
 	{
-		 y = x.parent.right; 
-		 if(y.color =='r')
-		 {
-			 y.color ='b';
-			 x.parent.color ='r';
-			 l_rot(x.parent);
-			 y = x.parent.right;
+	  while((!n.parent.isNil()) && n.parent.color == 'r')
+	   {
+	     Node y;
+             if(n.parent == n.parent.parent.left)
+	       {
+		 y = n.parent.parent.right;
+		 if((!y.isNil()) && y.color =='r')
+	            {
+	             n.parent.color ='b';
+		     y.color ='b';
+		     n.parent.parent.color = 'r';
+		     n = n.parent.parent;
+	            }
+		       
+	          else if(n==n.parent.right)   
+	               {
+			n=n.parent;
+	                l_rot(n);
+	               }
+	        n.parent.color = 'b';
+	        n.parent.parent.color ='r';
+	        r_rot(n.parent.parent)
+	       }	
+	      else
+	      {			    
+		y = n.parent.parent.left;
+		if((!y.isNil()) && y.color =='r')
+	          {
+		    n.parent.color ='b';
+		    y.color ='b';
+		    n.parent.parent.color = 'r';
+		    n = n.parent.parent;
+	          }			    
+	        else if(n==n.parent.left)     
+	         {
+		   n=n.parent;
+	           r_rot(n);
 		 }
-		 if((y.left.color =='b'|| y.left.color == '-' )&& (y.right.color == 'b'|| y.right.color == '-'))
-		    {y.color = 'r';
-		     x=x.parent;	   
-		    }    
-		 else if(y.right.color =='b' || y.right.color =='-')
+		n.parent.color = 'b';
+	        n.parent.parent.color ='r';
+	        l_rot(n.parent.parent);
+              }
+            }
+	    root.color = 'b';	
+       }
+	
+       public void transplant(Node x, Node y)
+       {
+	 if(x.parent.isNil())
+           this.root = y;
+         else if(x ==x.parent.left)
+                 x.parent.left = y;
+	      else x.parent.right = y;
+		 y.parent = x.parent;
+       }
+
+       public Node treeMin(Node x)
+       {
+	while(!x.left.isNil())
+          x = x.left;
+	return x;
+	}
+	 
+	//Deletes the node from a tree
+	public void delete(Node z)
+	{
+	 Node x,y;
+         y = z;
+         char orig = z.color;
+         if(z.left.isNil())
+	    {
+	     x = z.right;
+             transplant(z,z.right);
+	    }
+	 else if(z.right.isNil())    
+             { 
+	       x = z.right;   
+	       transplant(z, z.left);
+	     }
+         else{
+	      y = treeMin(z.right); 
+	      orig = y.color;
+	      x = y.right;
+	      if(y.parent==z)  
+	        x.parent=y;
+	      else{
+	           transplant(y,y.right);
+	           y.right = z.right;
+	           y.right.parent =y;
+	          }
+	     transplant(z,y);		        
+	     y.left = z.left;
+	     y.left.parent =y;
+	     y.color = z.color;
+	    }
+	    if(orig == 'b')
+            deleteFixup(x);
+       }
+
+	public void deleteFixup(Node x)
+	{
+	  while(x!= root && (x.color =='b' || x.color == '-'))
+	  {
+	    Node y;
+            if(x==x.parent.left)
+	    { 
+              y = x.parent.right; 
+              if(y.color =='r')
+	       { 
+		 y.color ='b';
+	         x.parent.color ='r';
+	         l_rot(x.parent);
+	         y = x.parent.right;
+	       }
+	      if((y.left.color =='b'|| y.left.color == '-' )&& (y.right.color == 'b'|| y.right.color == '-'))
+	        {
+		  y.color = 'r';
+		  x=x.parent;	   
+		}    
+	       else if(y.right.color =='b' || y.right.color =='-')
 		    {
-			  y.left.color = 'b';
-			  y.color ='r';
-			  r_rot(y);
-			  y=x.parent.right;
-			}
-		  y.color =x.parent.color;
-		  x.parent.color ='b';
-		  y.right.color ='b';   
-		  l_rot(x.parent);
-		  x =root;
-	}// end if
-			
-   else{
-	   
-	   if(x==x.parent.right)
-		{
-			 y = x.parent.left; 
-			 if(y.color =='r')
-			 {
-				 y.color ='b';
-				 x.parent.color ='r';
-				 r_rot(x.parent);
-				 y = x.parent.left;
-			 }
-			 if((y.left.color =='b'|| y.left.color == '-' )&& (y.right.color == 'b'|| y.right.color == '-'))
-			    {y.color = 'r';
-			     x=x.parent;	   
-			    }    
-			 else if(y.left.color =='b' || y.left.color =='-')
-			    {
-				  y.right.color = 'b';
-				  y.color ='r';
-				  l_rot(y);
-				  y=x.parent.left;
-				}
-			  y.color =x.parent.color;
-			  x.parent.color ='b';
-			  y.left.color ='b';   
-			  r_rot(x.parent);
-			  x =root;
-		}//end if
-  }//end else
- }//end while
- 
- x.color ='b';
-		
-}
+		     y.left.color = 'b';
+	             y.color ='r';
+	             r_rot(y);
+		     y=x.parent.right;
+		     }
+	       y.color =x.parent.color;
+               x.parent.color ='b';
+	       y.right.color ='b';   
+	       l_rot(x.parent);
+	       x =root;
+	    }
+	    else
+	     {
+	      if(x==x.parent.right)
+	       {
+	         y = x.parent.left; 
+	         if(y.color =='r')
+	          {
+		   y.color ='b';
+		   x.parent.color ='r';
+	           r_rot(x.parent);
+		   y = x.parent.left;
+	          }
+	         if((y.left.color =='b'|| y.left.color == '-' )&& (y.right.color == 'b'|| y.right.color == '-'))
+	          {
+                   y.color = 'r';
+	           x = x.parent;	   
+	          }    
+	         else if(y.left.color =='b' || y.left.color =='-')
+		  {
+		   y.right.color = 'b';
+		   y.color ='r';
+		   l_rot(y);
+		   y=x.parent.left;
+		  }
+	         y.color =x.parent.color;
+	         x.parent.color ='b';
+	         y.left.color ='b';   
+	         r_rot(x.parent);
+	         x =root;
+		}
+	     }
+         }
+         x.color ='b';
+       }
 	
 	// Prints the tree in preorder fashion
-	public void print(){
+	public void print()
+	 {
+	   if(root.isNil())
+	      System.out.println("Tree is empty!");	
+	   else{
+		print(root.left);
+		System.out.println(root.id+" "+root.count+"\n");
+		print(root.right);
+	       }	
+	  }
 		
-		if(root.isNil())
-		System.out.println("Tree is empty!");	
-		
-		else{
-			
-			print(root.left);
-			
-			System.out.println(root.id+" "+root.count+"\n");
-			
-			print(root.right);
-		}
-		
-	}
+	private void print(Node n)
+	 {
+	    if(!n.isNil())
+	    {
+	      print(n.left);
+	      System.out.println(n.id+" "+n.count+"\n");
+	      print(n.right);
+	     }	
+	 }   
 	
+	public Node search(int id)
+	 {
+	   Node found= new Node();
+	   if(root.isNil())
+	     {
+		 found = null;
+	     }
+	   if(this.root.id == id)
+	      {
+		return this.root;
+	      }
+	   else found = search(this.root, id);
+	   return found;
+	 }
 	
-	private void print(Node n){
-		
-	   if(!n.isNil()){
-		   
-		print(n.left);
-		
-		System.out.println(n.id+" "+n.count+"\n");
-		
-		print(n.right);
-		   
-	   
-	   				}	
-		
-		}   
-	//Searches the tree for a node with id given
-	public Node search(int id){
-		
-		  Node found= new Node();
-		
-		  if(root.isNil())
-			{
-				//System.out.println("Not found!");
-				return found;
-			}
-		  
-		  
-		  if(this.root.id == id)
-		 {//System.out.println("Found!");
-		 return this.root;
-		 }
-		
-		else found = search(this.root, id);
-		 return found;
-		
-	}
-	
-	
-	public Node search(Node n, int id){
-		
-		Node found = new Node();
-		
-		if(n.isNil())
+	 public Node search(Node n, int id)
+	 {
+	   Node found = new Node();
+	   if(n.isNil())
 		{
-			//System.out.println("Not found!");
-			return found;
+		 found = null;
 		}
-		
-		if(n.id == id)
-		{//System.out.println("Found!");
-		 found = n;
-		 }
-	
-		else if(id < n.id)	
-		  found = search(n.left, id);
-		
-		     else if(id > n.id)
-	           found = search(n.right, id);
-	
-		return found;
-		
-	}
-	
-	}
+	   if(n.id == id)
+	     {
+	       found = n;
+	     }
+	   else if(id < n.id)	
+		 found = search(n.left, id);
+		else if(id > n.id)
+	              found = search(n.right, id);
+           return found;
+	 }
+ }
 
 
-
-public class bbst {
-
+public class bbst
+ {
 	//Creates a tree from a sorted array of elements from start to end
-	public static Node createTree(Tree t, int arr[][], int start, int end){
+	public static Node createTree(Tree t, int arr[][], int start, int end)
+	 {
+	  Node nil = new Node();
+	  if(start > end)
+	    return nil;
+          int mid = (start +end)/2;
 		
-		Node nil = new Node();
-		
-		if(start > end)
-		  return nil;
-			
-		int mid = (start +end)/2;
-		
-		
-		Node n = new Node(arr[mid][0],arr[mid][1]);
-	    n.color ='b';	
-		
-	
-			
-		n.left = createTree(t, arr, start,mid-1);
-		n.left.parent = n;
-		n.right =createTree(t, arr, mid+1,end);
-		n.right.parent = n;
-		
-		if(n.left.isNil() && t.root.right.isNil())
-		{     n.color ='r';            }
-			
-			
-		return n;
-		
-		
-	}
+          Node n = new Node(arr[mid][0],arr[mid][1]);
+	  n.color ='b';	
+	  n.left = createTree(t, arr, start,mid-1);
+	  n.left.parent = n;
+          n.right =createTree(t, arr, mid+1,end);
+          n.right.parent = n;
+          if(n.left.isNil() && t.root.right.isNil())
+		{     
+		 n.color ='r';
+		}
+	  return n;
+         }
 	
 	//Increases the count of the node with id by m
-	public static void increase(Tree t, int id , int m){
-		
-		  Node x = t.search(id);
-		
-		  if(x.isNil()){
-			  
-			  x = new Node(id, m);
-			  t.insert(x);
-		  }
-		
-		  else x.count += m;
-		  System.out.println(x.count);
-		  
-		
-	}
+	public static void increase(Tree t, int id , int m)
+	 {
+	   Node x = t.search(id);
+	   if(x.isNil())
+	    {
+	      x = new Node(id, m);
+	      t.insert(x);
+	    }
+	   else x.count += m;
+	   System.out.println(x.count);
+         }
 	
 	//decreases the count of the node with id by m
-	public static void reduce(Tree t, int id , int m){
-		
-		  Node x = t.search(id);
-		
-		  if(x.isNil()){
-			  
-			 System.out.println(0); 
-			  
-			  }
-		
-		  else{
-			  
-			  x.count-=m;
-			  
-			  if(x.count<=0)
-			  { t.delete(x);
-			    System.out.println(0);
-			  }
-			  else
-				  System.out.println(x.count);
-			  
-		      }
-		  
-		  
-		
-	}
+	public static void reduce(Tree t, int id , int m)
+	 {
+	  Node x = t.search(id);
+	  if(x.isNil())
+	   {
+	     System.out.println(0); 
+           }
+	  else
+	   {
+	     x.count-=m;
+	     if(x.count<=0)
+	       {
+		 t.delete(x);
+	         System.out.println(0);
+	       }
+	     else
+	       System.out.println(x.count);
+	   }
+         }
 	
 	// Prints the count of the node with id
 	public static void count(Tree t, int id){
