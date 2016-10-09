@@ -7,13 +7,11 @@ import java.util.*;
 
 class Node
  {
-	public int id;
-	public int count;
-	public char color;
-	Node left,right,parent;
-	
-	
-		
+        public int id;
+        public int count;
+        public char color;
+        Node left,right,parent;
+	 
 	public Node()
 	{	
 	  this.id = -1;
@@ -21,8 +19,7 @@ class Node
 	  color = '-';
 	  left = right = parent = this; 
 	}
-	
-	
+		
 	public Node(int id, int count)
 	{
 	   this.id =id;
@@ -417,357 +414,234 @@ public class bbst
          }
 	
 	// Prints the count of the node with id
-	public static void count(Tree t, int id){
-		
-		Node x = t.search(id);
-		
-		if(x.isNil()){
-		
-			System.out.println(0);
-					
-		}
-		 
-		else System.out.println(x.count);
-		
-                
-		
-		
-	}
+	public static void count(Tree t, int id)
+	 {
+	  Node x = t.search(id);
+	  if(x.isNil())
+	    {
+	     System.out.println(0);
+	    }
+	  else System.out.println(x.count);
+         }
 	
 	//Returns the successor of the node with id
-	public static Node next(Tree t, int id){
-		
-	    Node x = t.search(id);
-	    Node z;
-	    Node nil = new Node();
+	public static Node next(Tree t, int id)
+	 {
+	   Node x = t.search(id);
+	   Node z;
+	   Node nil = new Node();
+	   
+           if(x.isNil())
+	     return nil;
 	    
-	    
-	    if(x.isNil())
-		 return nil;
-	    
-	    else if(!x.right.isNil())
+	   else if(!x.right.isNil())
 	    {
-	    	
-	    	Node y = t.treeMin(x.right);	    
-	    	return y;
+	      Node y = t.treeMin(x.right);	    
+	      return y;
 	    }
-	    	 
-	    else
+	   else
 	    {
-	    	z=x;
-	    	
-	    	
-	    	while(z.parent.left!=z && (!z.parent.isNil()))
+	      z=x;
+	      while(z.parent.left!=z && (!z.parent.isNil()))
 	    	{
-	    		z =z.parent;
-	    		
+	         z =z.parent;
 	    	}
-	    	    
-	    	 
-	    	   return z.parent;
-	    	  	    	
-	      
-	    	    
-	    }
-	  	   	
-	}
+	       return z.parent;
+	     }
+	  }
 	
 	// Takes the id(either present in the tree or not) and prints the next node's id and count
-	 public static void printNext(Tree t, int id){
-		   
-		Node x = t.search(id);
-			Node y;
-			Node z = new Node();
-			 if(!x.isNil())
-			   {
-				 Node nex =next(t,id);
-				 if(!nex.isNil())
-				   nex.print();
-				 else System.out.println("0 0");
-			   }
-		   
-			 else if(x.isNil()){
-				 
-				 
+	 public static void printNext(Tree t, int id)
+	  {
+           Node x = t.search(id);
+	   Node y;
+	   Node z = new Node();
+	    if(!x.isNil())
+	      {
+	       Node nx =next(t,id);
+	       if(!nx.isNil())
+		   nx.print();
+	       else System.out.println("0 0");
+	      }
+	    else if(x.isNil())
+	          {		 
 		    y = t.root;
-				 if(id <= y.id)
-				   while(id <= y.id){
-					   z = prev(t,y.id);
-			            if(z.isNil())break;
-			             y=z;
-			     }   
-			       if(!z.isNil())
-			         y = next(t, y.id);     
-				   
-	              
-				 
-				 else if(id >= y.id)
-				     {
-					   while(id >= y.id && !y.isNil())
-					     y = next(t, y.id);
-					   
-				     }			 
-	 
-			       if(y.isNil())
-			    	   System.out.println("0 0");
-			       else
-			        y.print();
-				  
-				  
-			 
-			 }
-		   
-	   }
+		    if(id <= y.id)
+                       while(id <= y.id)
+		       {
+			 z = prev(t,y.id);
+			 if(z.isNil())
+			    break;
+			 y=z;
+			}   
+		     if(!z.isNil())
+			  y = next(t, y.id);     
+		     else if(id >= y.id)
+		            while(id >= y.id && !y.isNil())
+			       y = next(t, y.id);
+		     if(y.isNil())
+			System.out.println("0 0");
+		     else
+			y.print();
+		   }
+	}
 	
-	 //Prints all nodes in the tree with ids between id1 and id2
-	 public static void inRange(Tree t, int id1, int id2)
+	//Prints all nodes in the tree with ids between id1 and id2
+	public static void inRange(Tree t, int id1, int id2)
 	 {
-		 
-		 if(t.root.isNil())
-		System.out.println("0");	 
-			 
-		 
-		 else{ 
-			 
+	  if(t.root.isNil())
+	    System.out.println("0");	 
+	  else
+	   { 
 	     int count = inRange(t, t.root,id1,id2);
-		 
-		 System.out.println(count);
-		 
-		 }
+             System.out.println(count);
+           }
 	 }
-	 
 	 
 	 private static int inRange(Tree t, Node x, int id1, int id2)
 	 {
-		
-		 int count=0;
-		 
-		 if(x.isNil())
-		   return 0;
-		 
-		 else if(id1<= x.id && id2 >= x.id)
+	   int count=0;
+	   if(x.isNil())
+	      return 0;
+	   else if(id1<= x.id && id2 >= x.id)
 		 {
-			 count+=x.count;
-			 
+	           count+=x.count;
 		 }		 
-			 count+= inRange(t, x.left,id1,id2);
-			 count+= inRange(t, x.right,id1,id2);
+	   count+= inRange(t, x.left,id1,id2);
+	   count+= inRange(t, x.right,id1,id2);
 			 
-		 
-	      
-		 return count;
-	 
-	 }
+           return count;
+	}
 	 
 	 //Prints the node previous to the given id(present or absent in the tree)
-	 public static void printPrev(Tree t, int id){
-		 
-		Node x = t.search(id);
-		Node y;
-		Node z = new Node();
-		 if(!x.isNil())
-		   {
-			 Node pre =prev(t,id);
-			 if(!pre.isNil())
-			   pre.print();
-			 else System.out.println("0 0");
-		   }
-	   
-		 else if(x.isNil()){
-			 y = t.root;
-			 if(id <= y.id)
-			   while(id <= y.id && !y.isNil())
-			      y = prev(t,y.id);     
-			 else
-			     {
-				   while(id >= y.id){
-				     
-					   z = next(t,y.id);
-				       if(z.isNil())break;
-				       y=z;
-				     }   
-				   if(!z.isNil())
-				  y = prev(t, y.id);
-				   
-			     }			 
- 
-			 if(y.isNil())
-				 System.out.println("0 0");
-			 else 
-			  y.print();
-		 
-		 }
+	 public static void printPrev(Tree t, int id)
+	  {
+	    Node x = t.search(id);
+            Node y;
+            Node z = new Node();
+	    if(!x.isNil())
+	     {
+	      Node pre =prev(t,id);
+	      if(!pre.isNil())
+		 pre.print();
+	      else System.out.println("0 0");
+	     }
+	    else if(x.isNil())
+	          {
+		    y = t.root;
+	            if(id <= y.id)
+		      while(id <= y.id && !y.isNil())
+			  y = prev(t,y.id);     
+		    else
+		     {
+		      while(id >= y.id)
+		        { 
+		          z = next(t,y.id);
+		          if(z.isNil())
+			     break;
+		          y=z;
+		        }   
+		      if(!z.isNil())
+		        y = prev(t, y.id);
+		     }			 
+                    if(y.isNil())
+		       System.out.println("0 0");
+		    else y.print();
+		  }
+	   } 
 	 
-	 } 
-	 
-	 //Returns the predecessor of the node with id
-	 public static Node prev(Tree t, int id){
-		 
-		 Node x = t.search(id);
-		 
-		 if(x.isNil())
-			 return x;
-		 
-		 else if(!x.left.isNil())
-		      {
-			    Node y = x.left;
-			    
-			    while(!y.right.isNil())
-			         y=y.right;
-			    
-			    return y;
-			 
-		      }
-		 
-		 else 
-		      {
-			    Node z =x;
-			    
-			    while(z.parent.right!=z && (!z.parent.isNil()))
+	//Returns the predecessor of the node with id
+	public static Node prev(Tree t, int id)
+	 {
+	   Node x = t.search(id);
+	   if(x.isNil())
+	     return x;
+	   else if(!x.left.isNil())
+		  {
+		    Node y = x.left;
+		    while(!y.right.isNil())
+			   y=y.right;
+		    return y;
+	          }
+	         else 
+		  {
+		     Node z =x;
+	             while(z.parent.right!=z && (!z.parent.isNil()))
 		    	{
-		    		z =z.parent;
-		    		
-		    	}
-		    	    
-		    	 
-		    	   return z.parent;
-			    			 
-		      }
-		 
-		 
-		 
-		 
+		          z =z.parent;
+		        }
+		     return z.parent;
+	            }
 	 }
 	 
 	 
-	 
-	 
-	 public static void main(String args[]){
-		 
-
-	      // Initialize tree using Scanner class to read file from argument 
-	        String s = new String();
-
-                 Tree t = new Tree();
-
-	        if(args[0]== null)
-	             System.out.println("File expected");
-	        else s = args[0];
-try{
+	public static void main(String args[])
+	{
+          // Initialize tree using Scanner class to read file from argument 
+	  String s = new String();
+          Tree t = new Tree();
+          if(args[0]== null)
+	  System.out.println("File expected");
+	  else s = args[0];
+          try{
 	       File f = new File(s);
 	       Scanner sc = new Scanner(f); 
 	       int size = sc.nextInt();
-	       
 	       int arr [][]= new int[size][2];
-	       
-	       for(int i=0;i<size;i++){
-	    	   
-	    	   arr[i][0] = sc.nextInt();
-	    	   
-	    	   arr[i][1] = sc.nextInt();
-	    	   
+	       for(int i=0;i<size;i++)
+	       {
+	    	 arr[i][0] = sc.nextInt();
+	    	 arr[i][1] = sc.nextInt();
 	       }
-
-	      sc.close();
-	      
-	     
-	      
-	      t.root =createTree(t, arr, 0, size-1);
-	      
-	      
-	      
-   }
-
-catch(Exception e){e.printStackTrace();}
-	       
-
-
-//Reading commands from redirected stdin stream  
- 
-       Scanner sc = new Scanner(System.in);	
-
-	
+               sc.close();
+	       t.root =createTree(t, arr, 0, size-1);
+	     }
+	 catch(Exception e)
+	 {e.printStackTrace();}
+	    
+   	//Reading commands from redirected stdin stream  
+ 	Scanner sc = new Scanner(System.in);
         String s3 = new String();
-
 	while(sc.hasNextLine())		
-	  {
-
-                s3 = sc.nextLine();
-              
-
-                Scanner sc3 = new Scanner(s3);	
-
-                
-                String token = sc3.next();
-               
-               
-              
-
-                
-                if(token.equals("increase"))
-                  {
-                     int i = sc3.nextInt();
-                      
-                     int j = sc3.nextInt();
-
-                     increase(t,i,j);
+	 {
+           s3 = sc.nextLine();
+           Scanner sc3 = new Scanner(s3);	
+           String token = sc3.next();
+           if(token.equals("increase"))
+             {
+               int i = sc3.nextInt();
+               int j = sc3.nextInt();
+	       increase(t,i,j);
+             }  
+           else if(token.equals("reduce"))
+                 {
+                  int i = sc3.nextInt();
+                  int j = sc3.nextInt();
+	          reduce(t,i,j);
                   }  
-
-                 else if(token.equals("reduce"))
-                  {
-                     int i = sc3.nextInt();
-                      
-                     int j = sc3.nextInt();
-
-                     reduce(t,i,j);
-                  }  
-
-                       else if(token.equals("count"))
-                            {
-                             
+                else if(token.equals("count"))
+                      {
+                        int i = sc3.nextInt();
+                        count (t,i);
+                      }  
+                     else if (token.equals("inrange"))
+                           {
                              int i = sc3.nextInt();
-                             
-                             count (t,i);
-                            }  
-
-                              else if (token.equals("inrange"))
+                             int j = sc3.nextInt();
+                             inRange(t,i,j);
+                            } 
+		          else if(token.equals("next"))
+                                {
+                                  int i = sc3.nextInt();
+                                  printNext(t,i);
+                                 }  
+                               else if(token.equals("previous"))
                                    {
-                                    int i = sc3.nextInt();
-                      
-                                    int j = sc3.nextInt();
-
-                                    inRange(t,i,j);
-                                    }   
-
-            
-                                    else if(token.equals("next"))
-                                          {
-                                           int i = sc3.nextInt();
-                                           printNext(t,i);
-                                           }  
-
-
-                                          else if(token.equals("previous"))
-                                          {
-                                           
-                                           int i = sc3.nextInt();
-                                           
-                                           printPrev(t,i);
-                                           }
-                                                else if(token.equals("quit"))
-                                                  break;
-
-                                       
-                                            
-
-              }
-
-
-                                 
-
- 
-		 
-	 }
-	 
-	 
-}
+                                     int i = sc3.nextInt();
+                                     printPrev(t,i);
+                                    }
+                                    else if(token.equals("quit"))
+                                         break;
+	   }
+	}
+ }
